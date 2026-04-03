@@ -1,13 +1,8 @@
 /* 時刻表示デモ用 */
-#include <Wire.h>
 
 #define HC595_DATA  10
 #define HC595_CLOCK 11
 #define HC595_LATCH 12
-
-#define I2C_SDA 0
-#define I2C_SCL 1
-#define PPS_IN  2
 
 typedef struct {
   uint8_t hour;
@@ -64,10 +59,6 @@ local_time_t count_up(local_time_t res) {
 void setup() {
   Serial.begin(115200);
   for(int8_t i = 0; i < 100 & !Serial; i++) delay(10);
-
-  Wire.setSDA(I2C_SDA);
-  Wire.setSCL(I2C_SCL);
-  Wire.begin();
 
   pinMode(HC595_DATA , OUTPUT);  digitalWrite(HC595_DATA , LOW);
   pinMode(HC595_CLOCK, OUTPUT);  digitalWrite(HC595_CLOCK, LOW);
