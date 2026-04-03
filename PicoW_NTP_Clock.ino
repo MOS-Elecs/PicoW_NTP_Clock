@@ -16,8 +16,8 @@
 
 #define CHECKSUM 0b10101010
 
-#define DEBUG_EN false
-#define FORCE_RTC_RESET true
+#define DEBUG_EN        true
+#define FORCE_RTC_RESET false
 
 typedef struct {
   uint8_t hour;
