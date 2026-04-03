@@ -30,6 +30,7 @@ const uint8_t font[10] = {0b11111100, 0b01100000, 0b11011010, 0b11110010, 0b0110
 
 rtc_calender_t reset_time_info = {0};
 
+// adapt to your network
 const char* WLAN_SSID = "RuckusIoT";
 const char* WLAN_PSK  = "ruckusiot";
 
