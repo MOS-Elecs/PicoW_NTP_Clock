@@ -144,7 +144,7 @@ uint8_t bcd2dec(uint8_t datum) {
   return (((datum & 0b1111000) >> 4) * 10) + (datum & 0b00001111);
 }
 
-void connecting(void) {
+void connecting_animation(void) {
   static uint8_t count = 0;
 
   switch(count) {
@@ -275,7 +275,7 @@ void setup() {
     WiFi.begin(WLAN_SSID, WLAN_PSK);
     Serial.print("WiFi.begin done.\n");
     while (WiFi.status() != WL_CONNECTED) {
-      connecting();
+      connecting_animation();
       delay(100);
     } 
 
@@ -290,6 +290,8 @@ void setup() {
       Serial.print("Trying to connect to NTP Server\n");
     }
     init_rtc(get_time(NTP_SERVER, GMT));
+
+    WiFi.disconnect();
   }
 } 
 
@@ -303,8 +305,34 @@ void loop() {
     display_time(now);
 
     if((now.hour == reset_time_info.hour) && (now.min == reset_time_info.min) && (now.sec == reset_time_info.sec)) {
+      if(DEBUG_EN) {
+        Serial.print("Trying to connect to "); 
+        Serial.println(WLAN_SSID); 
+      }
+
+      WiFi.mode(WIFI_STA);
+      WiFi.begin(WLAN_SSID, WLAN_PSK);
+      Serial.print("WiFi.begin done.\n");
+      while (WiFi.status() != WL_CONNECTED) {
+        connecting_animation();
+        delay(100);
+      } 
+
+      if(DEBUG_EN) {
+        Serial.print("\n\nWiFi connected!\n"); 
+        Serial.print("IP address: "); 
+        Serial.println(WiFi.localIP());
+      }
+
+      // 時刻取得関数
+      if(DEBUG_EN) {
+        Serial.print("Trying to connect to NTP Server\n");
+      }
+
       rtc_calender_t now = get_time(NTP_SERVER, GMT);
       init_rtc(now);
+     
+      WiFi.disconnect();
     }
   }
 
