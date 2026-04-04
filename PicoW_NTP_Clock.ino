@@ -104,7 +104,7 @@ rtc_calender_t read_rtc(void) {
 
 /* 時刻表示用の関数 */
 void display_time(const rtc_calender_t time) {
-  drive595(0b1000000 >> time.week);
+  drive595(0b01000000 >> (time.week % 7));
   drive595(font[time.sec%10]);
   drive595(font[time.sec/10]);
   drive595(font[time.min%10]);
