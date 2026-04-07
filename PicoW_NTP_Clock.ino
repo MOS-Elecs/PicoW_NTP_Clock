@@ -94,9 +94,9 @@ rtc_calender_t read_rtc(void) {
   Wire.endTransmission();
   Wire.requestFrom(RTC_I2C_ADDR, 4);
 
-  res.sec  = bcd2dec(Wire.read());
-  res.min  = bcd2dec(Wire.read());
-  res.hour = bcd2dec(Wire.read());
+  res.sec  = Wire.read();
+  res.min  = Wire.read();
+  res.hour = Wire.read();
   res.week = Wire.read();
 
   return res;
@@ -105,17 +105,17 @@ rtc_calender_t read_rtc(void) {
 /* 時刻表示用の関数 */
 void display_time(const rtc_calender_t time) {
   drive595(0b01000000 >> (time.week % 7));
-  drive595(font[time.sec%10]);
-  drive595(font[time.sec/10]);
-  drive595(font[time.min%10]);
-  drive595(font[time.min/10]);
-  drive595(font[time.hour%10]);
-  drive595(font[time.hour/10]);
+  drive595(font[time.sec & 0b00001111]);
+  drive595(font[time.sec >> 4]);
+  drive595(font[time.min & 0b00001111]);
+  drive595(font[time.min >> 4]);
+  drive595(font[time.hour & 0b00001111]);
+  drive595(font[time.hour >> 4]);
   latch595();
 
   if(DEBUG_EN) {
     char buffer[32];
-    sprintf(buffer, "%d-%d-%d\n", time.hour, time.min, time.sec);
+    sprintf(buffer, "%h-%h-%h\n", time.hour, time.min, time.sec);
     Serial.print(buffer);
   }
 }
@@ -138,10 +138,6 @@ void latch595(void) {
 
 uint8_t dec2bcd(uint8_t datum) {
   return ((datum / 10) << 4) | (datum % 10);
-}
-
-uint8_t bcd2dec(uint8_t datum) {
-  return (((datum & 0b1111000) >> 4) * 10) + (datum & 0b00001111);
 }
 
 void connecting_animation(void) {
