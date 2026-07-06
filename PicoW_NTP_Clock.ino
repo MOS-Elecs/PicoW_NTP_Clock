@@ -1,7 +1,5 @@
 #include <WiFi.h>
-#include <time.h>
 #include <TimeLib.h>
-#include <stdio.h>
 #include <Wire.h>
 
 #define HC595_DATA  10
