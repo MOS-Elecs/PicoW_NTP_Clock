@@ -306,7 +306,10 @@ void loop() {
 
       WiFi.mode(WIFI_STA);
       WiFi.begin(WLAN_SSID, WLAN_PSK);
-      Serial.print("WiFi.begin done.\n");
+      if(DEBUG_EN) {
+        Serial.print("WiFi.begin done.\n");
+      }
+
       while (WiFi.status() != WL_CONNECTED) {
         connecting_animation();
         delay(100);
